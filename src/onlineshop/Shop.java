@@ -25,11 +25,11 @@ public class Shop {
         }
         
         // Checks if a Table with the Orders already exists, if not it gets added
-        if (!dbManager.checkTableExists("ORDER")) {
+        if (!dbManager.checkTableExists("ORDERS")) {
             dbManager.createOrderTable();
-            System.out.println("Order table created.");
+            System.out.println("Orders table created.");
         } else {
-            System.out.println("Order table already exists.");
+            System.out.println("Orders table already exists.");
         }
 
         // Get products from database and add to inventory
