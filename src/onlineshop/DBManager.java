@@ -81,33 +81,74 @@ public class DBManager {
         }
     }
 
-public void updateProducts(Inventory inventory) {
-    String updateSQL = "UPDATE PRODUCT SET NAME = ?, MANUFACTURER = ?, PRICE = ?, RATING = ?, REVIEWS = ? WHERE ID = ?";
-    
-    try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
-        for (Product product : inventory.getAllProducts()) {
-            if (product != null) {
-                pstmt.setString(1, product.get_model_name());
-                pstmt.setString(2, product.get_name_of_manufacturer());
-                pstmt.setDouble(3, product.get_retail_price());
-                pstmt.setDouble(4, product.get_reliability_rating());
-                pstmt.setInt(5, product.get_no_of_reviews());
-                pstmt.setInt(6, product.get_id());
-                
-                // Add to batch
-                pstmt.addBatch();
-            }
+    public void createOrderTable() {
+        try {
+            Statement statement = conn.createStatement();
+            statement.executeUpdate("CREATE TABLE ORDERS (ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), AMOUNT INT, MODELNAME VARCHAR(100), MANUFACTURER VARCHAR(100), TOTAL DOUBLE)");
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
-        // Execute batch update
-        pstmt.executeBatch();
+    }
+
+    public void saveOrder(String modelName, String manufacturer, int amount, double totalCost) {
+        String insertSQL = "INSERT INTO ORDERS (AMOUNT, MODELNAME, MANUFACTURER, TOTAL) VALUES (?, ?, ?, ?)";
+        try ( PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
+            pstmt.setInt(1, amount);
+            pstmt.setString(2, modelName);
+            pstmt.setString(3, manufacturer);
+            pstmt.setDouble(4, totalCost);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+public void viewOrders() {
+    String querySQL = "SELECT AMOUNT, MODELNAME, MANUFACTURER, TOTAL FROM ORDERS";
+    try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(querySQL)) {
+        System.out.println("\nCurrent Orders:");
+        while (rs.next()) {
+            int amount = rs.getInt("AMOUNT");
+            String modelName = rs.getString("MODELNAME");
+            String manufacturer = rs.getString("MANUFACTURER");
+            double total = rs.getDouble("TOTAL");
+
+            // Simplified output using string concatenation
+            String orderInfo = amount + " x " + modelName + " by " + manufacturer + " for a total of: " + String.format("%.2f", total);
+            System.out.println(orderInfo);
+        }
     } catch (SQLException ex) {
-        System.out.println("Error updating database: " + ex.getMessage());
+        System.out.println("Error reading from database: " + ex.getMessage());
         ex.printStackTrace();
     }
 }
 
 
+    public void updateProducts(Inventory inventory) {
+        String updateSQL = "UPDATE PRODUCT SET NAME = ?, MANUFACTURER = ?, PRICE = ?, RATING = ?, REVIEWS = ? WHERE ID = ?";
 
+        try ( PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+            for (Product product : inventory.getAllProducts()) {
+                if (product != null) {
+                    pstmt.setString(1, product.get_model_name());
+                    pstmt.setString(2, product.get_name_of_manufacturer());
+                    pstmt.setDouble(3, product.get_retail_price());
+                    pstmt.setDouble(4, product.get_reliability_rating());
+                    pstmt.setInt(5, product.get_no_of_reviews());
+                    pstmt.setInt(6, product.get_id());
+
+                    // Add to batch
+                    pstmt.addBatch();
+                }
+            }
+            // Execute batch update
+            pstmt.executeBatch();
+        } catch (SQLException ex) {
+            System.out.println("Error updating database: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
 
     public List<Product> getProductsFromDatabase() {
         List<Product> products = new ArrayList<>();

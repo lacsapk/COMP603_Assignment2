@@ -16,16 +16,20 @@ public class Shop {
         FileInputOutput fileIO = new FileInputOutput(inventory);
         DBManager dbManager = new DBManager();
 
-        // Reads the Products from the file to the inventory and adds them as Products
-        // fileIO.loadProductsFromFile("./resources/products.txt");
-        // List<Product> products = inventory.getAllProductsAsList();
-
         // Checks if a Table with the Products already exists, if not it gets added
         if (!dbManager.checkTableExists("PRODUCT")) {
             dbManager.createProductTable();
             System.out.println("Product table created and populated with initial data.");
         } else {
             System.out.println("Product table already exists.");
+        }
+        
+        // Checks if a Table with the Orders already exists, if not it gets added
+        if (!dbManager.checkTableExists("ORDER")) {
+            dbManager.createOrderTable();
+            System.out.println("Order table created.");
+        } else {
+            System.out.println("Order table already exists.");
         }
 
         // Get products from database and add to inventory
@@ -60,7 +64,7 @@ public class Shop {
 
             } // handling both cases of the letter C
             else if (option.toLowerCase().charAt(0) == 'c') {
-                fileIO.viewOrders();
+                dbManager.viewOrders();
 
             } // handling both cases of the letter D
             else if (option.toLowerCase().charAt(0) == 'd') {

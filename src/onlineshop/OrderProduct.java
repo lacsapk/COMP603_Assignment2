@@ -7,6 +7,7 @@ public class OrderProduct {
     private Inventory inventory;
     private Scanner scn;
     private FileInputOutput fileIO;
+    private DBManager dbManager;
 
     public OrderProduct(Inventory onlineShop, Scanner scanner) {
         this.inventory = onlineShop;
@@ -55,7 +56,7 @@ public class OrderProduct {
 
         // handling both cases of the letter A
         if (option.toLowerCase().charAt(0) == 'a') {
-            fileIO.saveOrderToFile(selectedProduct.get_model_name(), selectedProduct.get_name_of_manufacturer(), amount, totalCost);
+            dbManager.saveOrder(selectedProduct.get_model_name(), selectedProduct.get_name_of_manufacturer(), amount, totalCost);
 
         } // handling both cases of the letter B
         else if (option.equalsIgnoreCase("b")) {
