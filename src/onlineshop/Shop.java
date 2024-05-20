@@ -9,12 +9,12 @@ public class Shop {
     //	declaring an instance variable of my_online_shop
     private static Inventory inventory = new Inventory();
     private static Scanner scn = new Scanner(System.in);
+    private static DBManager dbManager = new DBManager();
 
     //	main method
     public static void main(String[] args) {
-        ShopFunctions shopFunctions = new ShopFunctions(inventory, scn);
+        ShopFunctions shopFunctions = new ShopFunctions(inventory, scn, dbManager);
         FileInputOutput fileIO = new FileInputOutput(inventory);
-        DBManager dbManager = new DBManager();
 
         // Checks if a Table with the Products already exists, if not it gets added
         if (!dbManager.checkTableExists("PRODUCT")) {
@@ -23,7 +23,7 @@ public class Shop {
         } else {
             System.out.println("Product table already exists.");
         }
-        
+
         // Checks if a Table with the Orders already exists, if not it gets added
         if (!dbManager.checkTableExists("ORDERS")) {
             dbManager.createOrderTable();

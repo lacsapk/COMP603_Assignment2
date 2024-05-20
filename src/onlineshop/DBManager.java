@@ -62,43 +62,42 @@ public class DBManager {
         return exists;
     }
 
-public void createProductTable() {
-    try {
-        Statement statement = conn.createStatement();
+    public void createProductTable() {
+        try {
+            Statement statement = conn.createStatement();
 
-        // Create the PRODUCT table
-        statement.addBatch("CREATE TABLE PRODUCT (ID INT PRIMARY KEY, NAME VARCHAR(100), MANUFACTURER VARCHAR(100), PRICE DOUBLE, RATING DOUBLE, REVIEWS INT)");
+            // Create the PRODUCT table
+            statement.addBatch("CREATE TABLE PRODUCT (ID INT PRIMARY KEY, NAME VARCHAR(100), MANUFACTURER VARCHAR(100), PRICE DOUBLE, RATING DOUBLE, REVIEWS INT)");
 
-        // Insert initial data using a single batch
-        statement.addBatch("INSERT INTO PRODUCT VALUES (1, 'PlayStation 5', 'PlayStation inc', 999.00, 3.37, 12), " +
-                           "(2, 'Samsung Galaxy', 'Samsung Electronics', 1400.00, 3.55, 4), " +
-                           "(3, 'Nintendo Switch', 'Nintendo Corporation', 639.00, 4.60, 5), " +
-                           "(4, 'Xbox', 'Microsoft Corporation', 1100.00, 4.95, 2), " +
-                           "(5, 'Iphone 14', 'Apple Technology Company', 2200.00, 3.50, 5)");
+            // Insert initial data using a single batch
+            statement.addBatch("INSERT INTO PRODUCT VALUES (1, 'PlayStation 5', 'PlayStation inc', 999.00, 3.37, 12), "
+                    + "(2, 'Samsung Galaxy', 'Samsung Electronics', 1400.00, 3.55, 4), "
+                    + "(3, 'Nintendo Switch', 'Nintendo Corporation', 639.00, 4.60, 5), "
+                    + "(4, 'Xbox', 'Microsoft Corporation', 1100.00, 4.95, 2), "
+                    + "(5, 'Iphone 14', 'Apple Technology Company', 2200.00, 3.50, 5)");
 
-        // Execute the batch
-        statement.executeBatch();
-        statement.close();
-    } catch (SQLException ex) {
-        System.out.println(ex.getMessage());
+            // Execute the batch
+            statement.executeBatch();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
-}
 
-public void createOrderTable() {
-    try {
-        Statement statement = conn.createStatement();
+    public void createOrderTable() {
+        try {
+            Statement statement = conn.createStatement();
 
-        // Create the ORDERS table
-        statement.addBatch("CREATE TABLE ORDERS (ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), AMOUNT INT, MODELNAME VARCHAR(100), MANUFACTURER VARCHAR(100), TOTAL DOUBLE)");
+            // Create the ORDERS table
+            statement.addBatch("CREATE TABLE ORDERS (ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), AMOUNT INT, MODELNAME VARCHAR(100), MANUFACTURER VARCHAR(100), TOTAL DOUBLE)");
 
-        // Execute the batch to create the table
-        statement.executeBatch();
-        statement.close();
-    } catch (SQLException ex) {
-        System.out.println(ex.getMessage());
+            // Execute the batch to create the table
+            statement.executeBatch();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
-}
-
 
     public void saveOrder(String modelName, String manufacturer, int amount, double totalCost) {
         String insertSQL = "INSERT INTO ORDERS (AMOUNT, MODELNAME, MANUFACTURER, TOTAL) VALUES (?, ?, ?, ?)";
@@ -108,31 +107,31 @@ public void createOrderTable() {
             pstmt.setString(3, manufacturer);
             pstmt.setDouble(4, totalCost);
             pstmt.executeUpdate();
+            System.out.println("Order has been placed.");
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-public void viewOrders() {
-    String querySQL = "SELECT AMOUNT, MODELNAME, MANUFACTURER, TOTAL FROM ORDERS";
-    try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(querySQL)) {
-        System.out.println("\nCurrent Orders:");
-        while (rs.next()) {
-            int amount = rs.getInt("AMOUNT");
-            String modelName = rs.getString("MODELNAME");
-            String manufacturer = rs.getString("MANUFACTURER");
-            double total = rs.getDouble("TOTAL");
+    public void viewOrders() {
+        String querySQL = "SELECT AMOUNT, MODELNAME, MANUFACTURER, TOTAL FROM ORDERS";
+        try ( Statement stmt = conn.createStatement();  ResultSet rs = stmt.executeQuery(querySQL)) {
+            System.out.println("\nCurrent Orders:");
+            while (rs.next()) {
+                int amount = rs.getInt("AMOUNT");
+                String modelName = rs.getString("MODELNAME");
+                String manufacturer = rs.getString("MANUFACTURER");
+                double total = rs.getDouble("TOTAL");
 
-            // Simplified output using string concatenation
-            String orderInfo = amount + " x " + modelName + " by " + manufacturer + " for a total of: " + String.format("%.2f", total);
-            System.out.println(orderInfo);
+                // Simplified output using string concatenation
+                String orderInfo = amount + " x " + modelName + " by " + manufacturer + " for a total of: " + String.format("%.2f", total);
+                System.out.println(orderInfo);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error reading from database: " + ex.getMessage());
+            ex.printStackTrace();
         }
-    } catch (SQLException ex) {
-        System.out.println("Error reading from database: " + ex.getMessage());
-        ex.printStackTrace();
     }
-}
-
 
     public void updateProducts(Inventory inventory) {
         String updateSQL = "UPDATE PRODUCT SET NAME = ?, MANUFACTURER = ?, PRICE = ?, RATING = ?, REVIEWS = ? WHERE ID = ?";

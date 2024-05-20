@@ -10,12 +10,13 @@ public class ShopFunctions {
     private Scanner scn;
     private RateProduct rateProduct;
     private OrderProduct orderProduct;
+    private DBManager dbManager;
 
-    public ShopFunctions(Inventory onlineShop, Scanner scanner) {
+    public ShopFunctions(Inventory onlineShop, Scanner scanner, DBManager dbManager) {
         this.inventory = onlineShop;
         this.scn = scanner;
-        this.rateProduct = new RateProduct(onlineShop, scanner);
-        this.orderProduct = new OrderProduct(onlineShop, scanner);
+        this.rateProduct = new RateProduct(onlineShop, scanner, dbManager);
+        this.orderProduct = new OrderProduct(onlineShop, scanner, dbManager);
     }
 
     // Desplays all the availiable Products

@@ -1,14 +1,13 @@
-Tue May 21 08:50:18 NZST 2024 : Apache Derby Network Server - 10.14.2.0 - (1828579) started and ready to accept connections on port 1527
 ----------------------------------------------------------------
-Tue May 21 08:50:18 NZST 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-018f-97c4-f3cc-00005f5abc30 
-on database directory C:\Users\pasca\OneDrive\Desktop\Dokumente\4. Semester\Program Design and Construction\OnlineShop\ShopDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@30946e09 
-Loaded from file:/C:/Users/pasca/OneDrive/Desktop/Dokumente/4.%20Semester/Program%20Design%20and%20Construction/OnlineShop/db-derby-10.14.2.0-bin/lib/derby.jar
+Tue May 21 11:30:04 NZST 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-018f-9857-37d2-00000ed077c0 
+on database directory C:\Users\pasca\OneDrive\Desktop\Dokumente\4. Semester\Program Design and Construction\OnlineShop\ShopDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@7aec35a 
+Loaded from file:/C:/Users/pasca/OneDrive/Desktop/Dokumente/4.%20Semester/Program%20Design%20and%20Construction/OnlineShop/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=11.0.21+9-LTS-193
-user.dir=C:\Users\pasca\OneDrive\Desktop\Dokumente\4. Semester\Program Design and Construction\OnlineShop\db-derby-10.14.2.0-bin
+user.dir=C:\Users\pasca\OneDrive\Desktop\Dokumente\4. Semester\Program Design and Construction\OnlineShop
 os.name=Windows 11
 os.arch=amd64
 os.version=10.0
-derby.system.home=C:\Users\pasca\OneDrive\Desktop\Dokumente\4. Semester\Program Design and Construction\OnlineShop
+derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
