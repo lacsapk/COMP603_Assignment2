@@ -1,3 +1,4 @@
+package onlineshop;
 
 public class StaticMethods {
 

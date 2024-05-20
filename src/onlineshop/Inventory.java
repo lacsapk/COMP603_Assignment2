@@ -1,6 +1,9 @@
+package onlineshop;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Inventory {
@@ -30,4 +33,9 @@ public class Inventory {
     public Collection<Product> getAllProducts() {
         return inventory.values();
     }
+
+    public List<Product> getAllProductsAsList() {
+        return new ArrayList<>(inventory.values());
+    }
 }
+

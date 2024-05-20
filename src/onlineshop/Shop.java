@@ -1,3 +1,5 @@
+package onlineshop;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,7 +14,19 @@ public class Shop {
     public static void main(String[] args) {
         ShopFunctions shopFunctions = new ShopFunctions(inventory, scn);
         FileInputOutput fileIO = new FileInputOutput(inventory);
+        DBManager dbManager = new DBManager();
+        
+        // Reads the Products from the file to the inventory and adds them as Products
         fileIO.loadProductsFromFile("./resources/products.txt");
+        List<Product> products = inventory.getAllProductsAsList(); 
+
+        // Checks if a Table with the Products already exists, if not it gets added
+        if (!dbManager.checkTableExists("PRODUCT")) {
+            dbManager.createProductTable(products);
+            System.out.println("Product table created and populated with initial data from file.");
+        } else {
+            System.out.println("Product table already exists.");
+        }
 
         // this loop will repeatedly show the menu and ask for an input until it is terminated by choosing "C" option
         while (true) {
@@ -25,7 +39,7 @@ public class Shop {
             System.out.print("  \\____/|_| |_|_|_|_| |_|\\___| |_____/|_| |_|\\___/| .__/ \n");
             System.out.print("                                                  | |    \n");
             System.out.print("                                                  |_|    \n");
-            
+
             System.out.println("\nChoose one of these options:\nA. Display inventory\nB. Search a Product\nC. View Orders\nD. Exit application");
             System.out.print("Type \"A\", \"B\" or \"C\" to select and \"D\" to exit the application:");
             String option = scn.nextLine();
@@ -45,9 +59,10 @@ public class Shop {
             } // handling both cases of the letter D
             else if (option.toLowerCase().charAt(0) == 'd') {
                 System.out.println("exiting...");
+                dbManager.closeConnection(); // Close Connection to DB
                 break; // terminating the loop
 
-            } else {              
+            } else {
                 System.out.println("Invalid Input, please enter \"A\", \"B\", \"C\" or \"D\"\n");
             }
         }
