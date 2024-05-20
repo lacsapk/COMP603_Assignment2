@@ -7,6 +7,7 @@ public class RateProduct {
     private Inventory inventory;
     private Scanner scn;
     private FileInputOutput fileIO;
+    private DBManager dbManager;
 
     public RateProduct(Inventory onlineShop, Scanner scanner) {
         this.inventory = onlineShop;
@@ -58,7 +59,7 @@ public class RateProduct {
         if (option.toLowerCase().charAt(0) == 'a') {
             System.out.println("\nRating updated!\n");
             // Save updated products back to the file
-            fileIO.saveProductsToFile("./resources/products.txt");
+            dbManager.updateProducts(inventory);
 
         } // handling both cases of the letter B
         else if (option.equalsIgnoreCase("b")) {

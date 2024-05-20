@@ -1,5 +1,5 @@
 PlayStation 5,PlayStation inc,999.00,3.37,12
-Samsung Galaxy,Samsung Electronics,1400.00,3.55,4
+Samsung Galaxy,Samsung Electronics,1400.00,3.84,5
 Nintendo Switch,Nintendo Corporation,639.00,4.60,5
 Xbox,Microsoft Corporation,1100.00,4.95,2
 Iphone 14,Apple Technology Company,2200.00,3.50,5

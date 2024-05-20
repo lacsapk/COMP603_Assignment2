@@ -4,6 +4,7 @@ import java.text.NumberFormat;
 
 public class Product {
     //	declaring the private instances variables that are used later
+    private int id;
     private String model_name;
     private String name_of_manufacturer;
     private double retail_price;
@@ -11,7 +12,8 @@ public class Product {
     private int no_of_reviews;
 
     // this constructor takes model name, manufacturer's name, and retail price as its parameters
-    public Product(String model_name, String name_of_manufacturer, double retail_price) {
+    public Product(int id, String model_name, String name_of_manufacturer, double retail_price) {
+        this.id = id;
         this.model_name = model_name;
         this.name_of_manufacturer = name_of_manufacturer;
         this.retail_price = retail_price;
@@ -20,6 +22,10 @@ public class Product {
     }
     
     // use constructor takes model name and retail price
+    
+    public int get_id() {
+        return id;
+    }
 
     // getter for model_name
     public String get_model_name() {

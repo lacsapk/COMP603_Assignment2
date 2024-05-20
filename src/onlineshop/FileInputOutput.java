@@ -14,28 +14,6 @@ public class FileInputOutput {
         this.inventory = inventory;
     }
 
-    // Load Products from File
-    public void loadProductsFromFile(String filename) {
-        try ( BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(","); // Split line by commas
-                if (parts.length == 5) { // Check for 5 parts: name, manufacturer, price, rating, reviews
-                    String modelName = parts[0];
-                    String manufacturer = parts[1];
-                    double price = Double.parseDouble(parts[2]);
-                    double rating = Double.parseDouble(parts[3]);
-                    int reviews = Integer.parseInt(parts[4]);
-                    Product product = new Product(modelName, manufacturer, price);
-                    product.setReliabilityRating(rating, reviews);
-                    inventory.add(product);
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error reading from file: " + e.getMessage());
-        }
-    }
-
     // Save Updated rating to File
     public void saveProductsToFile(String filename) {
         try ( BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
