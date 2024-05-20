@@ -15,17 +15,23 @@ public class Shop {
         ShopFunctions shopFunctions = new ShopFunctions(inventory, scn);
         FileInputOutput fileIO = new FileInputOutput(inventory);
         DBManager dbManager = new DBManager();
-        
+
         // Reads the Products from the file to the inventory and adds them as Products
-        fileIO.loadProductsFromFile("./resources/products.txt");
-        List<Product> products = inventory.getAllProductsAsList(); 
+        // fileIO.loadProductsFromFile("./resources/products.txt");
+        // List<Product> products = inventory.getAllProductsAsList();
 
         // Checks if a Table with the Products already exists, if not it gets added
         if (!dbManager.checkTableExists("PRODUCT")) {
-            dbManager.createProductTable(products);
-            System.out.println("Product table created and populated with initial data from file.");
+            dbManager.createProductTable();
+            System.out.println("Product table created and populated with initial data.");
         } else {
             System.out.println("Product table already exists.");
+        }
+
+        // Get products from database and add to inventory
+        List<Product> products = dbManager.getProductsFromDatabase();
+        for (Product product : products) {
+            inventory.add(product);
         }
 
         // this loop will repeatedly show the menu and ask for an input until it is terminated by choosing "C" option
@@ -58,8 +64,8 @@ public class Shop {
 
             } // handling both cases of the letter D
             else if (option.toLowerCase().charAt(0) == 'd') {
-                System.out.println("exiting...");
                 dbManager.closeConnection(); // Close Connection to DB
+                System.out.println("exiting...");
                 break; // terminating the loop
 
             } else {

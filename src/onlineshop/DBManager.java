@@ -6,9 +6,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DBManager {
+
     private static final String URL = "jdbc:derby:ProductDB;create=true";
     private Connection conn;
 
@@ -35,6 +37,7 @@ public class DBManager {
         if (conn != null) {
             try {
                 conn.close();
+                System.out.println("Closing connection to database...");
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
             }
@@ -57,20 +60,48 @@ public class DBManager {
         return exists;
     }
 
-     public void createProductTable(List<Product> products) {
+public void createProductTable() {
+    try {
+        Statement statement = conn.createStatement();
+        statement.executeUpdate("CREATE TABLE PRODUCT (ID INT PRIMARY KEY, NAME VARCHAR(100), MANUFACTURER VARCHAR(100), PRICE DOUBLE, RATING DOUBLE, REVIEWS INT)");
+
+        // Insert initial data manually
+        statement.addBatch("INSERT INTO PRODUCT VALUES (1, 'PlayStation 5', 'PlayStation inc', 999.00, 3.37, 12)");
+        statement.addBatch("INSERT INTO PRODUCT VALUES (2, 'Samsung Galaxy', 'Samsung Electronics', 1400.00, 3.55, 4)");
+        statement.addBatch("INSERT INTO PRODUCT VALUES (3, 'Nintendo Switch', 'Nintendo Corporation', 639.00, 4.60, 5)");
+        statement.addBatch("INSERT INTO PRODUCT VALUES (4, 'Xbox', 'Microsoft Corporation', 1100.00, 4.95, 2)");
+        statement.addBatch("INSERT INTO PRODUCT VALUES (5, 'Iphone 14', 'Apple Technology Company', 2200.00, 3.50, 5)");
+
+        statement.executeBatch();
+        statement.close();
+    } catch (SQLException ex) {
+        System.out.println(ex.getMessage());
+    }
+}
+
+
+    public List<Product> getProductsFromDatabase() {
+        List<Product> products = new ArrayList<>();
         try {
             Statement statement = conn.createStatement();
-            statement.executeUpdate("CREATE TABLE PRODUCT (ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), NAME VARCHAR(100), MANUFACTURER VARCHAR(100), PRICE DOUBLE, RATING DOUBLE, REVIEWS INT)");
+            ResultSet rs = statement.executeQuery("SELECT NAME, MANUFACTURER, PRICE, RATING, REVIEWS FROM PRODUCT");
 
-            for (Product product : products) {
-                String sql = String.format("INSERT INTO PRODUCT (NAME, MANUFACTURER, PRICE, RATING, REVIEWS) VALUES ('%s', '%s', %.2f, %.2f, %d)",
-                        product.get_model_name(), product.get_name_of_manufacturer(), product.get_retail_price(), product.get_reliability_rating(), product.get_no_of_reviews());
-                statement.executeUpdate(sql);
+            while (rs.next()) {
+                String name = rs.getString("NAME");
+                String manufacturer = rs.getString("MANUFACTURER");
+                double price = rs.getDouble("PRICE");
+                double rating = rs.getDouble("RATING");
+                int reviews = rs.getInt("REVIEWS");
+
+                Product product = new Product(name, manufacturer, price);
+                product.setReliabilityRating(rating, reviews);
+                products.add(product);
             }
-
+            rs.close();
             statement.close();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+        return products;
     }
 }
