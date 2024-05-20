@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DBManager {
 
-    private static final String URL = "jdbc:derby:ProductDB;create=true";
+    private static final String URL = "jdbc:derby:ShopDB;create=true";
     private Connection conn;
 
     public DBManager() {
@@ -62,34 +62,43 @@ public class DBManager {
         return exists;
     }
 
-    public void createProductTable() {
-        try {
-            Statement statement = conn.createStatement();
-            statement.executeUpdate("CREATE TABLE PRODUCT (ID INT PRIMARY KEY, NAME VARCHAR(100), MANUFACTURER VARCHAR(100), PRICE DOUBLE, RATING DOUBLE, REVIEWS INT)");
+public void createProductTable() {
+    try {
+        Statement statement = conn.createStatement();
 
-            // Insert initial data manually
-            statement.addBatch("INSERT INTO PRODUCT VALUES (1, 'PlayStation 5', 'PlayStation inc', 999.00, 3.37, 12)");
-            statement.addBatch("INSERT INTO PRODUCT VALUES (2, 'Samsung Galaxy', 'Samsung Electronics', 1400.00, 3.55, 4)");
-            statement.addBatch("INSERT INTO PRODUCT VALUES (3, 'Nintendo Switch', 'Nintendo Corporation', 639.00, 4.60, 5)");
-            statement.addBatch("INSERT INTO PRODUCT VALUES (4, 'Xbox', 'Microsoft Corporation', 1100.00, 4.95, 2)");
-            statement.addBatch("INSERT INTO PRODUCT VALUES (5, 'Iphone 14', 'Apple Technology Company', 2200.00, 3.50, 5)");
+        // Create the PRODUCT table
+        statement.addBatch("CREATE TABLE PRODUCT (ID INT PRIMARY KEY, NAME VARCHAR(100), MANUFACTURER VARCHAR(100), PRICE DOUBLE, RATING DOUBLE, REVIEWS INT)");
 
-            statement.executeBatch();
-            statement.close();
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
+        // Insert initial data using a single batch
+        statement.addBatch("INSERT INTO PRODUCT VALUES (1, 'PlayStation 5', 'PlayStation inc', 999.00, 3.37, 12), " +
+                           "(2, 'Samsung Galaxy', 'Samsung Electronics', 1400.00, 3.55, 4), " +
+                           "(3, 'Nintendo Switch', 'Nintendo Corporation', 639.00, 4.60, 5), " +
+                           "(4, 'Xbox', 'Microsoft Corporation', 1100.00, 4.95, 2), " +
+                           "(5, 'Iphone 14', 'Apple Technology Company', 2200.00, 3.50, 5)");
+
+        // Execute the batch
+        statement.executeBatch();
+        statement.close();
+    } catch (SQLException ex) {
+        System.out.println(ex.getMessage());
     }
+}
 
-    public void createOrderTable() {
-        try {
-            Statement statement = conn.createStatement();
-            statement.executeUpdate("CREATE TABLE ORDERS (ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), AMOUNT INT, MODELNAME VARCHAR(100), MANUFACTURER VARCHAR(100), TOTAL DOUBLE)");
-            statement.close();
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
+public void createOrderTable() {
+    try {
+        Statement statement = conn.createStatement();
+
+        // Create the ORDERS table
+        statement.addBatch("CREATE TABLE ORDERS (ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), AMOUNT INT, MODELNAME VARCHAR(100), MANUFACTURER VARCHAR(100), TOTAL DOUBLE)");
+
+        // Execute the batch to create the table
+        statement.executeBatch();
+        statement.close();
+    } catch (SQLException ex) {
+        System.out.println(ex.getMessage());
     }
+}
+
 
     public void saveOrder(String modelName, String manufacturer, int amount, double totalCost) {
         String insertSQL = "INSERT INTO ORDERS (AMOUNT, MODELNAME, MANUFACTURER, TOTAL) VALUES (?, ?, ?, ?)";
