@@ -9,9 +9,7 @@ import java.sql.Statement;
 import java.util.List;
 
 public class DBManager {
-    private static final String URL = "jdbc:derby://localhost:1527/ProductDB;create=true";
-    private static final String USER_NAME = "pdc"; 
-    private static final String PASSWORD = "pdc"; 
+    private static final String URL = "jdbc:derby:ProductDB;create=true";
     private Connection conn;
 
     public DBManager() {
@@ -25,8 +23,8 @@ public class DBManager {
     public void establishConnection() {
         if (this.conn == null) {
             try {
-                conn = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
-                System.out.println(URL + " Get Connected Successfully ....");
+                conn = DriverManager.getConnection(URL);
+                System.out.println("Embedded Derby database connected successfully.");
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
             }
