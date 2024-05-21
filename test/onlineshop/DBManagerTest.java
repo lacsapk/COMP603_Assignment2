@@ -1,5 +1,10 @@
 package onlineshop;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -34,7 +39,7 @@ public class DBManagerTest {
         instance.closeConnection();
     }
 
-    @Test 
+    @Test
     public void testSaveOrder() {
         System.out.println("saveOrder");
         String modelName = "TestModel";
@@ -90,5 +95,53 @@ public class DBManagerTest {
         List<Product> result = instance.getProductsFromDatabase();
         assertNotNull("Products should be retrievable from the database", result);
         assertFalse("Product list should not be empty", result.isEmpty());
+    }
+
+    @Test
+    public void testCreateProductTable() {
+        // First part Checks if the Table has been created
+        System.out.println("createProductTable");
+        instance.createProductTable();
+        boolean tableExists = instance.checkTableExists("PRODUCT");
+        assertTrue("Product table should be created", tableExists);
+
+        // Defines the Columns and valuetypes the table must have
+        String[] expectedColumns = {"ID", "NAME", "MANUFACTURER", "PRICE", "RATING", "REVIEWS"};
+        String[] expectedTypes = {"INT", "VARCHAR", "VARCHAR", "DOUBLE", "DOUBLE", "INT"};
+
+        // gets all the values from the table Product
+        try ( Statement stmt = instance.getConnection().createStatement();  ResultSet rs = stmt.executeQuery("SELECT * FROM PRODUCT")) {
+
+            // get the information from the received data
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            // Check if the number of columns matches
+            assertEquals("Number of columns should match", expectedColumns.length, columnCount);
+
+            // Check each columns name and type
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = metaData.getColumnName(i).toUpperCase();
+                String columnType = metaData.getColumnTypeName(i).toUpperCase();
+                assertEquals("Column name should match", expectedColumns[i - 1], columnName);
+                // ignore diffrences between Int and Integer aswell as Double and Decimal
+                boolean typeMatches = columnType.equals(expectedTypes[i - 1])
+                        || (expectedTypes[i - 1].equals("INT") && columnType.equals("INTEGER"))
+                        || (expectedTypes[i - 1].equals("DOUBLE") && columnType.equals("DECIMAL"));
+                assertTrue("Column type should match", typeMatches);
+            }
+        } catch (SQLException e) {
+            fail("SQLException occurred while checking table structure: " + e.getMessage());
+        }
+    }
+
+    @Test
+    // Checks if the Table has been created
+    public void testCreateOrderTable() {
+        System.out.println("createOrderTable");
+        instance.createOrderTable();
+        // Assuming there is a method to check if the table exists
+        boolean tableExists = instance.checkTableExists("ORDERS");
+        assertTrue("Order table should be created", tableExists);
     }
 }
