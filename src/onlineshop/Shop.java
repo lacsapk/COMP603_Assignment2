@@ -14,7 +14,6 @@ public class Shop {
     //	main method
     public static void main(String[] args) {
         ShopFunctions shopFunctions = new ShopFunctions(inventory, scn, dbManager);
-        FileInputOutput fileIO = new FileInputOutput(inventory);
 
         // Checks if a Table with the Products already exists, if not it gets added
         dbManager.initializeProductTable();

@@ -6,13 +6,11 @@ import java.util.Scanner;
 public class OrderProduct {
     private Inventory inventory;
     private Scanner scn;
-    private FileInputOutput fileIO;
     private DBManager dbManager;
 
     public OrderProduct(Inventory onlineShop, Scanner scanner, DBManager dbManager) {
         this.inventory = onlineShop;
         this.scn = scanner;
-        this.fileIO = new FileInputOutput(inventory);
         this.dbManager = dbManager;
     }
 
