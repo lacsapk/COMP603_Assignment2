@@ -48,7 +48,7 @@ public class Shop {
 
             } // handling both cases of the letter C
             else if (option.toLowerCase().charAt(0) == 'c') {
-                dbManager.viewOrders();
+                dbManager.displayOrders();
 
             } // handling both cases of the letter D
             else if (option.toLowerCase().charAt(0) == 'd') {

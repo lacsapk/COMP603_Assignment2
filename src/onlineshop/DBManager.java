@@ -74,6 +74,15 @@ public class DBManager {
         }
     }
 
+    // Starts the process of presenting the Orders
+    public void displayOrders() {
+        List<String> orders = this.getOrders();
+        System.out.println("\nCurrent Orders:");
+        for (String order : orders) {
+            System.out.println(order);
+        }
+    }
+
     // Checks if the Table already exists
     public boolean checkTableExists(String tableName) {
         boolean exists = false;
@@ -145,25 +154,26 @@ public class DBManager {
         }
     }
 
-    // Displays the Table Orders
-    public void viewOrders() {
-        String querySQL = "SELECT AMOUNT, MODELNAME, MANUFACTURER, TOTAL FROM ORDERS";
-        try ( Statement stmt = conn.createStatement();  ResultSet rs = stmt.executeQuery(querySQL)) {
-            System.out.println("\nCurrent Orders:");
+    // Get a list of the Orders out of the DB Table Orders
+    public List<String> getOrders() {
+        List<String> orders = new ArrayList<>();
+        String query = "SELECT AMOUNT, MODELNAME, MANUFACTURER, TOTAL FROM ORDERS";
+
+        try ( Statement stmt = conn.createStatement();  ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
                 int amount = rs.getInt("AMOUNT");
                 String modelName = rs.getString("MODELNAME");
                 String manufacturer = rs.getString("MANUFACTURER");
                 double total = rs.getDouble("TOTAL");
 
-                // Simplified output using string concatenation
                 String orderInfo = amount + " x " + modelName + " by " + manufacturer + " for a total of: " + String.format("%.2f", total);
-                System.out.println(orderInfo);
+                orders.add(orderInfo);
             }
-        } catch (SQLException ex) {
-            System.out.println("Error reading from database: " + ex.getMessage());
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        return orders;
     }
 
     // Updates the Table Product with the new values
