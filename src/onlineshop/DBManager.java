@@ -46,6 +46,35 @@ public class DBManager {
         }
     }
 
+    // Checks if a Table with the Products already exists, if not it gets added
+    public void initializeProductTable() {
+        if (!checkTableExists("PRODUCT")) {
+            createProductTable();
+            System.out.println("Product table created and populated with initial data.");
+        } else {
+            System.out.println("Product table already exists.");
+        }
+    }
+
+    // Checks if a Table with the Orders already exists, if not it gets added
+    public void initializeOrderTable() {
+        if (!checkTableExists("ORDERS")) {
+            createOrderTable();
+            System.out.println("Orders table created.");
+        } else {
+            System.out.println("Orders table already exists.");
+        }
+    }
+
+    // Starts the process of loading Products from the DB and adding them to the inventory as products
+    public void initializeInventory(Inventory inventory) {
+        List<Product> products = getProductsFromDatabase();
+        for (Product product : products) {
+            inventory.add(product);
+        }
+    }
+
+    // Checks if the Table already exists
     public boolean checkTableExists(String tableName) {
         boolean exists = false;
         try {
@@ -62,6 +91,7 @@ public class DBManager {
         return exists;
     }
 
+    // Creates the Table called Product
     public void createProductTable() {
         try {
             Statement statement = conn.createStatement();
@@ -84,6 +114,7 @@ public class DBManager {
         }
     }
 
+    // creates the Table called Order
     public void createOrderTable() {
         try {
             Statement statement = conn.createStatement();
@@ -99,6 +130,7 @@ public class DBManager {
         }
     }
 
+    // Saves an order to the Table Orders
     public void saveOrder(String modelName, String manufacturer, int amount, double totalCost) {
         String insertSQL = "INSERT INTO ORDERS (AMOUNT, MODELNAME, MANUFACTURER, TOTAL) VALUES (?, ?, ?, ?)";
         try ( PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
@@ -113,6 +145,7 @@ public class DBManager {
         }
     }
 
+    // Displays the Table Orders
     public void viewOrders() {
         String querySQL = "SELECT AMOUNT, MODELNAME, MANUFACTURER, TOTAL FROM ORDERS";
         try ( Statement stmt = conn.createStatement();  ResultSet rs = stmt.executeQuery(querySQL)) {
@@ -133,6 +166,7 @@ public class DBManager {
         }
     }
 
+    // Updates the Table Product with the new values
     public void updateProducts(Inventory inventory) {
         String updateSQL = "UPDATE PRODUCT SET NAME = ?, MANUFACTURER = ?, PRICE = ?, RATING = ?, REVIEWS = ? WHERE ID = ?";
 
@@ -158,6 +192,7 @@ public class DBManager {
         }
     }
 
+    // Loads the Products from the Database and adds them as products (Class Product)
     public List<Product> getProductsFromDatabase() {
         List<Product> products = new ArrayList<>();
         try {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ShopFunctions {
+
     private Inventory inventory;
     private Scanner scn;
     private RateProduct rateProduct;
@@ -33,7 +34,7 @@ public class ShopFunctions {
 
         // Loop for when an inputMissmatch is caught
         while (continueInput) {
-            
+
             System.out.print("\nSelect Product by typing the number: ");
 
             try {
@@ -64,14 +65,25 @@ public class ShopFunctions {
 
     // Searches for a Product based on its modelName = Key
     public void searchProduct() {
-        System.out.print("\nEnter the product model name to search: ");
-        String modelName = scn.nextLine();
-        Product product = inventory.getProduct(modelName);
-        if (product != null) {
-            System.out.println("Product found: " + product);
-            rateOrder(product);
-        } else {
-            System.out.println("Product not found.");
+        while (true) {
+            System.out.print("\nEnter the product model name to search and \"D\" to exit: ");
+            String modelName = scn.nextLine();
+
+            // Check if the user wants to exit
+            if (modelName.equalsIgnoreCase("D")) {
+                System.out.println("Going back to the menu...");
+                System.out.println();
+                return;
+            }
+
+            Product product = inventory.getProduct(modelName);
+            if (product != null) {
+                System.out.println("Product found: " + product);
+                rateOrder(product);
+                break;
+            } else {
+                System.out.println("Product not found, please try again.");
+            }
         }
         System.out.println();
     }
@@ -79,12 +91,12 @@ public class ShopFunctions {
     // DecisionPoint (Routing) for rating a Product or ordering a product
     private void rateOrder(Product selectedProduct) {
         System.out.println("\nA. Order Product / B. Rate Product");
-        System.out.print("Type \"A\" or \"B\" to select and \"C\" to exit:");
+        System.out.print("Type \"A\" or \"B\" to select and \"D\" to exit:");
         String option = scn.nextLine();
 
-        while (option.toLowerCase().charAt(0) != 'a' && option.toLowerCase().charAt(0) != 'b' && option.toLowerCase().charAt(0) != 'c') {
+        while (option.toLowerCase().charAt(0) != 'a' && option.toLowerCase().charAt(0) != 'b' && option.toLowerCase().charAt(0) != 'd') {
             System.out.println(option + " is not a valid option, please try again!\n");
-            System.out.print("Type \"A\" or \"B\" to select and \"C\" to exit:");
+            System.out.print("Type \"A\" or \"B\" to select and \"D\" to exit:");
             option = scn.nextLine();
         }
 
@@ -96,8 +108,8 @@ public class ShopFunctions {
         else if (option.equalsIgnoreCase("b")) {
             rateProduct.rateProducts(selectedProduct);
 
-        } // handling both cases of letter C
-        else if (option.equalsIgnoreCase("c")) {
+        } // handling both cases of letter D
+        else if (option.equalsIgnoreCase("d")) {
             System.out.println("going to menu...");
             System.out.println();
         }

@@ -17,26 +17,11 @@ public class Shop {
         FileInputOutput fileIO = new FileInputOutput(inventory);
 
         // Checks if a Table with the Products already exists, if not it gets added
-        if (!dbManager.checkTableExists("PRODUCT")) {
-            dbManager.createProductTable();
-            System.out.println("Product table created and populated with initial data.");
-        } else {
-            System.out.println("Product table already exists.");
-        }
-
+        dbManager.initializeProductTable();
         // Checks if a Table with the Orders already exists, if not it gets added
-        if (!dbManager.checkTableExists("ORDERS")) {
-            dbManager.createOrderTable();
-            System.out.println("Orders table created.");
-        } else {
-            System.out.println("Orders table already exists.");
-        }
-
+        dbManager.initializeOrderTable();
         // Get products from database and add to inventory
-        List<Product> products = dbManager.getProductsFromDatabase();
-        for (Product product : products) {
-            inventory.add(product);
-        }
+        dbManager.initializeInventory(inventory);
 
         // this loop will repeatedly show the menu and ask for an input until it is terminated by choosing "C" option
         while (true) {
